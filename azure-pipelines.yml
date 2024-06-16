@@ -37,9 +37,9 @@ steps:
   
   #- task: AzureWebApp@1
   #  displayName: 'Deploy to Azure Web App'
-  #  inputs:
-  #    azureSubscription: 'hts_service_connection'
-  #    appName: 'dgl-backend-service-new'
-  #    appType: 'webApp'
-  #    package: '$(Build.ArtifactStagingDirectory)/drop/target/*.jar'
+  # inputs:
+   #   azureSubscription: 'ml_service_connection'
+    #  appName: 'dgl-backend-service-new'
+     # appType: 'webApp'
+      #package: '$(Build.ArtifactStagingDirectory)/drop/target/*.jar'
 
