@@ -16,9 +16,7 @@ steps:
         publishJUnitResults: true
         mavenAuthenticateFeed: true
         goals: 'clean verify -f pom.xml'
-        #options: |
-        #  -Dspring.datasource.url=$(DATASOURCE_URL)
-
+       
   - task: CopyFiles@2
     displayName: 'Copy JAR File to Staging Directory'
     inputs:
@@ -37,11 +35,11 @@ steps:
       artifactName: 'drop'
       downloadPath: '$(Build.ArtifactStagingDirectory)'
   
-  - task: AzureWebApp@1
-    displayName: 'Deploy to Azure Web App'
-    inputs:
-      azureSubscription: 'hts_service_connection'
-      appName: 'dgl-backend-service-new'
-      appType: 'webApp'
-      package: '$(Build.ArtifactStagingDirectory)/drop/target/*.jar'
+  #- task: AzureWebApp@1
+  #  displayName: 'Deploy to Azure Web App'
+  #  inputs:
+  #    azureSubscription: 'hts_service_connection'
+  #    appName: 'dgl-backend-service-new'
+  #    appType: 'webApp'
+  #    package: '$(Build.ArtifactStagingDirectory)/drop/target/*.jar'
 
