@@ -1,0 +1,47 @@
+trigger:
+  - main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  
+  - task: Maven@3
+    inputs:
+        mavenPomFile: 'pom.xml'
+        mavenOptions: '-Xmx3072m'
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: '1.21'
+        jdkArchitectureOption: 'x64'
+        publishJUnitResults: true
+        mavenAuthenticateFeed: true
+        goals: 'clean verify -f pom.xml'
+        #options: |
+        #  -Dspring.datasource.url=$(DATASOURCE_URL)
+
+  - task: CopyFiles@2
+    displayName: 'Copy JAR File to Staging Directory'
+    inputs:
+      contents: '**/target/*.jar'
+      targetFolder: '$(Build.ArtifactStagingDirectory)'
+  
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Build Artifacts'
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'drop'
+  
+  - task: DownloadBuildArtifacts@0
+    displayName: 'Download Build Artifacts'
+    inputs:
+      artifactName: 'drop'
+      downloadPath: '$(Build.ArtifactStagingDirectory)'
+  
+  - task: AzureWebApp@1
+    displayName: 'Deploy to Azure Web App'
+    inputs:
+      azureSubscription: 'hts_service_connection'
+      appName: 'dgl-backend-service-new'
+      appType: 'webApp'
+      package: '$(Build.ArtifactStagingDirectory)/drop/target/*.jar'
+
